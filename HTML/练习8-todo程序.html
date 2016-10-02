@@ -69,7 +69,7 @@
                 <div class="cell">
                     <button class = "todo-done" name="button">完成</button>
                     <button class = "todo-delete" name="button">删除</button>
-                    <span>${todo.task}</span><span>    </span><span>${todo.time}</span>
+                    <span contenteditable='true'>${todo.task}</span><span>    </span><span>${todo.time}</span>
                 </div>
                 `
                 return t
@@ -95,6 +95,25 @@
                     saveTodos()
                 }
             })
+
+            container.addEventListener('keydown',function(event){
+                    var self = event.target
+                    var parent = self.parentElement
+                    if(event.key === 'Enter') {
+                        log('按了回车')
+                        //使焦点不在输入框并且阻止默认行为的发生, 也就是不插入回车
+                        self.blur()
+                        event.preventDefault()
+                        //更新todoList并且保存
+                        //找到其父元素，即todo-cell是第几个，在对应的todoList里面修改
+                        var index = indexOfElement(parent)
+                        //获取修改后的值
+                        var newValue = self.innerHTML
+                        todoList[index].task = newValue
+                        saveTodos()
+                    }
+            })
+
 
             var toggle = function(element,className) {
                 if (element.classList.contains(className)) {
