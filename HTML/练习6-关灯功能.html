@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>练习js</title>
+        <style media="screen">
+            .change{
+                background-color: black;
+            }
+
+             #turn{
+                display: inline-block;
+                width: 100px;
+                height: 100px;
+                cursor: pointer;
+                /*z-index: 100;*/
+            }
+
+
+            .active{
+                background-color: lightblue;
+                /*z-index: 100;*/
+            }
+            .mask{
+                /*position: fixed;*/
+                top: 10%;
+                left: 10%;
+                width: 500px;
+                height: 300px;
+                background: white;
+                border: 6px solid red;
+                float: left;
+                clear: both;
+                /*opacity: 0.0;*/
+            }
+            .coat{
+                position: fixed;
+                top: 0%;
+                left: 0%;
+                width: 100%;
+                height: 100%;
+                background: black;
+                opacity: 0.0;
+                z-index: 100;
+            }
+            .coat-change{
+                /*z-index: 200;*/
+                opacity: 0.9;
+            }
+            .others{
+                float: left;
+                clear: both;
+                /*display: block;*/
+                border: 2px solid blue;
+                background-color: yellow;
+                margin-top: 100px;
+            }
+            .over{
+                /*display: table-cell;*/
+                position: relative;
+                background: white;
+                /*border: 2px solid blue;*/
+                z-index: 101;
+            }
+            button{
+                float: left;
+                clear: both;
+                /*position: fixed;*/
+                /*top: 0;
+                left:0px;*/
+                z-index: 102;
+            }
+
+        </style>
+    </head>
+    <body>
+        <!-- <button type="button" name="button" class="but">按钮1</button>
+        <button type="button" name="button" class="but">按钮2</button>
+        <button type="button" name="button" class="but">按钮3</button> -->
+
+        <div class="coat">
+
+        </div>
+        <div class="over">
+            <div class="mask">
+
+            </div>
+            <button name="button" id="turn">开关</button>
+        </div>
+
+        <div class="others">
+            <p>
+                你哈佛爱龙江发散弗拉囧扥啊撒扥蓝阿三扥阿帆带扫奥赛单反
+            </p>
+        </div>
+    <script type="text/javascript">
+        var on = document.querySelector('#turn')
+
+        var toggle = function(element,cls) {
+            if(element.classList.contains(cls)){
+                element.classList.remove(cls)
+            } else {
+                element.classList.add(cls)
+            }
+        }
+
+        var kaiguan = function() {
+            var back = document.querySelector('.coat')
+            toggle(back,'coat-change')
+        }
+
+        on.addEventListener('click',kaiguan)
+
+
+        var buts = document.querySelectorAll('.but')
+        for (var i = 0; i < buts.length; i++) {
+            var but = buts[i]
+            but.addEventListener('click',function(event){
+                var self = event.target
+                clearActive()
+                self.classList.add('active')
+            })
+        }
+        var clearActive = function() {
+            var active = document.querySelector('.active')
+            if(active != null) {
+                active.classList.remove('active')
+            }
+        }
+    </script>
+    </body>
+</html>

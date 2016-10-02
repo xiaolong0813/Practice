@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>练习</title>
+        <style media="screen">
+            .boom{
+                width: 100px;
+                background: lightyellow;
+
+            }
+            .boom-change{
+                background: red;
+            }
+            .tip1{
+                background: green;
+                /*float: left;*/
+                border:red;
+                /*display: none;*/
+            }
+            .tip2{
+                background: blue;
+                /*float: left;*/
+                border:red;
+                /*display: none;*/
+            }
+            .tip3{
+                background: red;
+                /*float: left;*/
+                /*display: none;*/
+            }
+            .tip-display{
+                display: block;
+            }
+
+
+            #next{
+                position: absolute;
+                width: 30px;
+                height: 100%;
+                right: 0;
+                background-color: transparent;
+                border: none;
+            }
+            span{
+                background: darkgrey;
+                width: 100%;
+                display: block;
+                color: white;
+
+            }
+            #previous{
+                /*display: inline-block;*/
+                position: absolute;
+                width: 30px;
+                height: 100%;
+                left: 0;
+                background-color: transparent;
+                border: none;
+            }
+            .slider{
+                display: none;
+                width: 80px;
+                height: 80px;
+
+            }
+            .active{
+                position: absolute;
+                left: 60px;
+                top:80px;
+                display: inline-block;
+            }
+            .fig{
+                position: relative;
+                width: 200px;
+                height: 200px;
+                border:red;
+                margin: 50px;
+                background-color: lightgreen;
+            }
+
+        </style>
+    </head>
+    <body>
+        <!-- <script src='words.js'></script>
+        <script src='task6.js'></script> -->
+        <!-- <button type="button" name="button" class="boom">爆炸1</button>
+        <button type="button" name="button" class="boom">爆炸2</button>
+        <button type="button" name="button" class="boom">爆炸3</button>
+        <div class="tip" >
+            你想死吗
+        </div>
+        <div class="tip">
+            boom!
+        </div>
+        <div class="tip">
+            完了
+        </div> -->
+
+        <div class="fig">
+            <button type="button" name="button" id="previous"><span>&lt;</span></button>
+            <img src="1.gif" alt="one" class="slider active"/>
+            <img src="2.jpg" alt="one" class="slider"/>
+            <img src="3.jpg" alt="one" class="slider"/>
+            <button type="button" name="button" id="next"><span>&gt;</span></button>
+        </div>
+
+        <script type="text/javascript">
+            var next = document.querySelector('#next')
+            var pres = document.querySelector('#previous')
+            var fig = document.querySelectorAll('.slider')
+            var current = 0
+            var numofIndex = 3
+            var nextFig = function() {
+                var now = document.querySelector('.active')
+                now.classList.remove('active')
+                current = (current + 1) % numofIndex
+                fig[current].classList.add('active')
+            }
+            var presFig = function() {
+                var now = document.querySelector('.active')
+                now.classList.remove('active')
+                current = (current + numofIndex - 1) % numofIndex
+                fig[current].classList.add('active')
+            }
+            next.addEventListener('click',nextFig)
+            pres.addEventListener('click',presFig)
+            setInterval(nextFig,3000)  //按照时间（ms）运行函数
+            // var but = document.querySelectorAll('.boom')
+            // for (var i = 0; i < but.length; i++) {
+            //     var one = but[i]
+            //
+            //     one.addEventListener('mouseover',function(event){
+            //         var self = event.target
+            //         // clearActive()
+            //         self.classList.add('boom-change')
+            //         var tip = document.querySelector('.tip')
+            //         tip.classList.add('tip'+i)
+            //     })
+            //     one.addEventListener('mouseout',function(event){
+            //         var self = event.target
+            //         self.classList.remove('boom-change')
+            //         var tip = document.querySelector('.tip')
+            //         tip.classList.remove('tip'+i)
+            //     })
+            // }
+
+            // var clearActive = function() {
+            //     var change = document.querySelector('.boom-change')
+            //     if (change != null) {
+            //         change.classList.remove('boom-change')
+            //     }
+            // }
+
+        </script>
+    </body>
+</html>

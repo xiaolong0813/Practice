@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>练习8</title>
+        <style media="screen">
+            .done{
+                color: gray;
+                text-decoration: line-through;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="todo-form">
+            <input id = "todo-input" type="text">
+            <button id = "todo-button" type="button">Add</button>
+        </div>
+        <div id="container">
+            <!-- <div class="cell">
+            <button class = "todo-done" name="button">完成</button>
+            <button class = "todo-delete" name="button">删除</button>
+            <span>上课</span>
+            </div> -->
+        </div>
+        <script type="text/javascript">
+
+        //log函数
+        var log = function() {
+            console.log.apply(console, arguments)
+        }
+        //时间标准库
+        var currentTime = function() {
+            var d = new Date()
+            var month = d.getMonth() + 1
+            var date = d.getDate()
+            var hours = d.getHours()
+            var minutes = (d.getMinutes() > 10) ? d.getMinutes() : '0' + d.getMinutes()
+            var seconds = d.getSeconds()
+            var timeString = `${month}/${date} ${hours}:${minutes}:${seconds}`
+            return timeString
+        }
+
+            var todoList = []
+
+            //获取input的值，并利用insertAdjacentHTML插入新代码
+            var add = document.querySelector('#todo-button')
+            add.addEventListener('click',function(){
+                var input = document.querySelector('#todo-input')
+                var inputValue = input.value
+                var todo = {
+                    task :inputValue,
+                    time :currentTime()
+                }
+                insertTodo(todo)
+                //将新的todo项目添加入todoList中，并保存
+                todoList.push(todo)
+                saveTodos()
+                // log(todoList)
+            })
+
+            var insertTodo = function(todo) {
+                var container = document.querySelector('#container')
+                var t = templateTodo(todo)
+                container.insertAdjacentHTML('beforeend',t)
+            }
+            var templateTodo = function(todo) {
+                //以下为模板字符串
+                var t = `
+                <div class="cell">
+                    <button class = "todo-done" name="button">完成</button>
+                    <button class = "todo-delete" name="button">删除</button>
+                    <span>${todo.task}</span><span>    </span><span>${todo.time}</span>
+                </div>
+                `
+                return t
+            }
+            //给父元素container添加两个按钮的click属性
+            var container = document.querySelector('#container')
+            container.addEventListener('click',function(event){
+                var self = event.target
+                //用event.target获取点击的元素，并检查包含的class以确定为哪个按钮
+                if (self.classList.contains('todo-done')) {
+                    //如果是完成按钮，就添加可以开关done的属性
+                    var todoDiv = self.parentElement
+                    toggle(todoDiv,'done')
+                    //如果是删除按钮，就删掉该div
+                } else if (self.classList.contains('todo-delete')) {
+                    var todoDiv = self.parentElement
+                    //获取目标元素target的父元素（即todo-cell）的index，将todoList中的该元素删除并保存
+                    var index = indexOfElement(todoDiv)
+                    //splice 函数，可以删去数组的某个元素,先再todoList里面删去，再remove掉
+                    todoList.splice(index,1)
+                    // log(todoList)
+                    todoDiv.remove()
+                    saveTodos()
+                }
+            })
+
+            var toggle = function(element,className) {
+                if (element.classList.contains(className)) {
+                    element.classList.remove(className)
+                } else {
+                    element.classList.add(className)
+                }
+            }
+            //用indexOfElement返回子元素element在父元素中的下标
+            //注意，父元素.children为包含所有子元素的数组,下面的element为一个子元素
+            var indexOfElement = function(element) {
+                var parent = element.parentElement
+                log(parent)
+                for (var i = 0; i < parent.children.length; i++) {
+                    var e = parent.children[i]
+                    if (e === element) {
+                        return i
+                    }
+                }
+            }
+
+            //saveTodos将todoList的数据保存到本地，用JSON
+            var saveTodos = function() {
+                var s = JSON.stringify(todoList)
+                localStorage.todoList = s
+                log(s)
+            }
+            //loadTodos将todoList的数据读取，并返回原数组
+            var loadTodos = function() {
+                var a = localStorage.todoList
+                return JSON.parse(a)
+            }
+
+            //刚打开页面时，用loadTodos将之前保存的数据todoList导入
+            todoList = loadTodos()
+            for (var i = 0; i < todoList.length; i++) {
+                insertTodo(todoList[i])
+            }
+        </script>
+
+    </body>
+</html>
