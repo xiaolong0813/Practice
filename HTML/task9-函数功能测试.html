@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>task9-测试</title>
+        <style media="screen">
+            .box{
+                position: relative;
+                /*border: 2px solid red;*/
+                margin-top: 30px;
+                z-index: 101;
+            }
+            .num7Test{
+                background: red;
+                color: white;
+                font-weight: bolder;
+            }
+            .coat{
+                position: fixed;
+                top: 0%;
+                left: 0%;
+                width: 100%;
+                height: 100%;
+                background: black;
+                opacity: 0.0;
+                z-index: 100;
+            }
+            .coat-change{
+                /*z-index: 200;*/
+                opacity: 0.9;
+            }
+            .num9Active{
+                background-color: red;
+            }
+            .boxRed{
+                width: 200px;
+                height: 50px;
+                border: 2px solid red;
+                margin-top: 5px;
+            }
+            .letter{
+                color: red;
+                font-weight: bolder;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="coat"></div>
+        <div class="num7 box">
+            <p>一、</p>
+            <p>如果下面出现红色背景白色字的“welldone”，第七题对了</p>
+        </div>
+        <div class="num8 box">
+            <p>二、</p>
+            <button class="button8">开关</button>
+            如果点击此按钮可以开关灯，说明第八题对了
+        </div>
+        <div class="num9 box">
+            <p>三、</p>
+            <p>如果下面第三个标签在鼠标划过的时候下方框内背景会变红或变白，第九题对了</p>
+            <span class="one">第一个       </span><span class="two">第二个        </span>
+            <span class="three">第三个     </span><span class="four">第四个</span>
+            <!-- <div class="boxRed">
+            </div> -->
+        </div>
+        <div class="num10 box">
+            <p>四、</p>
+            <ul>
+                <li>如果下面第一和第三个后面有字，第十题对了</li>
+                <li class="note">后面有字</li>
+                <li>后面无字</li>
+                <li class="note">后面有字</li>
+                <li>后面无字</li>
+            </ul>
+        </div>
+        <div class="num11 box">
+            <p>五、</p>
+            <p>没有第四个参数，点击任意一个都可以开关变红，说明十一题对了</p>
+            <div class="num111">
+                <button>第一个</button>
+                <button class="red">第二个</button>
+                <button>第三个</button>
+                <button class="red">第四个</button>
+            </div>
+            <p>有第四个参数，点击二和四，背景可以开关变红，说明十一题对了</p>
+            <div class="num112">
+                <button>第一个</button>
+                <button class="red">第二个</button>
+                <button>第三个</button>
+                <button class="red">第四个</button>
+            </div>
+        </div>
+        <script src='../JavaScript/task9.js'></script>
+        <script type="text/javascript">
+            //第七题测试
+            var test7 = function() {
+                var num7 = document.querySelector('.num7')
+                var t = `<p class="num7Test">Welldone!</p>`
+                appendHtml(num7, t)
+            }
+            //第八题测试，使用开关灯函数，注意position，类型，和z-index的数值
+            var toggle = function(element,cls) {
+                if(element.classList.contains(cls)){
+                    element.classList.remove(cls)
+                } else {
+                    element.classList.add(cls)
+                }
+            }
+            var kaiguan = function() {
+                var back = document.querySelector('.coat')
+                toggle(back,'coat-change')
+            }
+            var test8 = function() {
+                var element = document.querySelector('.button8')
+                bindEvent(element, 'click', kaiguan)
+            }
+            //第九题测试
+            //下面的是框红白开关的函数
+            var turnRed = function() {
+                // var red = document.querySelector('.boxRed')
+                var red = event.target
+                toggle(red,'num9Active')
+            }
+            var test9 = function() {
+                var element = document.querySelector('.num9')
+                bindEventDelegate(element, 'mouseover', turnRed, 'three')
+            }
+            //第十题测试
+            var test10 = function() {
+                var t = `<span class='letter'>      字</span>`
+                append('.note', t)
+            }
+            //第十一题测试
+            // var callback = function(event) {
+            //     var self = event.target
+            //     toggle(self,'num9Active')
+            // }
+            var test11 = function() {
+                bindAll('.num111', 'click', function(){
+                    // var target = document.querySelector('.num111')
+                    var target = event.target
+                    toggle(target,'num9Active')
+                })
+                bindAll('.num112', 'click', function(){
+                    var target = event.target
+                    // var target = document.querySelector('.num112')
+                    toggle(target,'num9Active')
+                },'red')
+            }
+            var test1 = function() {
+                ensureEqual(unique([1, 2, 3, 1, 3, 5]), [1, 2, 3, 5], 'test1测试1')
+                ensureEqual(unique([1, 1, 3, 3, 1, 3]), [1, 3], 'test1测试2')
+            }
+            var test2 = function() {
+                ensureEqual(intersection([1, 5, 8, 6, 3, 4, 8],[5, 1, 6, 6, 5]), [1, 5, 6], 'test2测试1')
+                ensureEqual(intersection([1,2,2,5,6,6], [1,2,3,4,7]), [1, 2], 'test2测试2')
+            }
+            var test3 = function() {
+                ensureEqual(union([1, 5, 8, 6, 3, 4, 8],[5, 1, 6, 6, 5]), [1, 5, 8, 6, 3, 4], 'test3测试1')
+                ensureEqual(union([1,2,3,4,5],[2,3,4,5,6,7]), [1, 2, 3, 4, 5, 6, 7], 'test3测试2')
+            }
+            var test4 = function() {
+                ensureEqual(difference([1,2,3,4,5],[2,3,4,5,6,7]), [1], 'test4测试1')
+                ensureEqual(difference([1,1,1,2,3,4,5,10,54],[2,3,4,5,6,7,10,555,3,5]), [1, 54], 'test4测试2')
+            }
+            var test5 = function() {
+                ensureEqual(differenceAll([1,1,2,2,3,4,5,6,7],[4,5,6,7,7,8,9,10]), [1, 2, 3, 8, 9, 10], 'test5测试1')
+                ensureEqual(differenceAll([1,2,3,4,5],[3,4,5,6,7,10]), [1,2,6,7,10], 'test5测试2')
+            }
+            var test6 = function() {
+                ensureEqual(isSubset([1,1,2,2,3],[1,2,5,7,4,3,9,10]), true, 'test6测试1')
+                ensureEqual(isSubset([1,1,2,2,3],[1,5,7,4,3,9,10]), false, 'test6测试2')
+            }
+
+            var __main = function() {
+                test1()
+                test2()
+                test3()
+                test4()
+                test5()
+                test6()
+                test7()
+                test8()
+                test9()
+                test10()
+                test11()
+            }
+
+            __main()
+        </script>
+    </body>
+</html>
