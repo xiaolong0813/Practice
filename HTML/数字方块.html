@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>数字方块</title>
+        <style media="screen">
+            body {
+                font-family: 'Microsoft YaHei';
+                background-color: lightgrey;
+                margin:0px;
+            }
+            .window {
+                margin: 10px auto;
+                width: 300px;
+                height: 300px;
+                border: 3px solid red;
+            }
+            .num {
+                width: 80px;
+                height: 80px;
+                background-color: red;
+                color: white;
+                font-weight: bolder;
+                text-align: center;
+                line-height: 80px;
+                font-size: 30px;
+                float: left;
+                margin: 10px;
+            }
+            .num0 {
+                background-color: lightgrey;
+            }
+            .button {
+                margin: 10px auto;
+                text-align: center;
+            }
+            .note {
+                margin: 10px auto;
+                width: 300px;
+                height: 50px;
+                font-size: 20px;
+                background-color: darkgrey;
+                color: white;
+                text-align: center;
+                line-height: 50px;
+                border-radius: 50px;
+                font-weight: bolder;
+            }
+            button {
+                width: 80px;
+                height: 30px;
+                background-image: linear-gradient(#336666,#66cccc);
+                color: white;
+            }
+        </style>
+        <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    </head>
+    <body>
+        <div class="note">
+            说明：方向键或wasd控制移动
+        </div>
+        <div class="window">
+            <div class="num" data-loc='1'>1</div>
+            <div class="num" data-loc='2'>2</div>
+            <div class="num" data-loc='3'>3</div>
+            <div class="num" data-loc='4'>4</div>
+            <div class="num" data-loc='5'>5</div>
+            <div class="num" data-loc='6'>6</div>
+            <div class="num" data-loc='7'>7</div>
+            <div class="num" data-loc='8'>8</div>
+            <div class="num num0" data-loc='9'></div>
+        </div>
+        <div class="button">
+            <!-- <button type="button" name="button" id="up">up</button>
+            <button type="button" name="button" id="down">down</button>
+            <button type="button" name="button" id="left">left</button>
+            <button type="button" name="button" id="right">right</button> -->
+            <button type="button" name="button" id="again">重新开始</button>
+        </div>
+
+        <script type="text/javascript">
+            var log = function() {
+                console.log.apply(console, arguments)
+            }
+            //根据data交换两个位置
+            var exchange = function(space, num) {
+                var value = num.text()
+                space.removeClass('num0')
+                num.addClass('num0')
+                space.text(value)
+                num.text('')
+            }
+            //向右移动
+            var rightMove = function() {
+                var space = $('.num0')
+                var prev = $('.num0').prev()
+                if (prev.length !== 0) {
+                    var col = prev.data('loc')
+                    if (!(col % 3 == 0)) {
+                        exchange(space, prev)
+                    }
+                }
+            }
+            //向左移动
+            var leftMove = function() {
+                var space = $('.num0')
+                var next = $('.num0').next()
+                if (next.length !== 0) {
+                    var col = next.data('loc')
+                    if (!(col % 3 == 1)) {
+                        exchange(space, next)
+                    }
+                }
+            }
+            //向下移动
+            var downMove = function() {
+                var space = $('.num0')
+                var spaceLoc = space.data('loc')
+                var upLoc = spaceLoc - 3
+                var up = $(`[data-loc=${upLoc}]`)
+                if (upLoc > 0) {
+                    exchange(space, up)
+                }
+            }
+            //向上移动
+            var upMove = function() {
+                var space = $('.num0')
+                var spaceLoc = space.data('loc')
+                var downLoc = spaceLoc + 3
+                var down = $(`[data-loc=${downLoc}]`)
+                if (downLoc < 10) {
+                    exchange(space, down)
+                }
+            }
+            //随机位置
+            var random = function() {
+                $('.remove').remove()
+                for (var i = 0; i < 20; i++) {
+                    var space = $('.num0')
+                    var ran = Math.floor(Math.random() * 9 + 1)
+                    var ranLoc = $(`[data-loc=${ran}]`)
+                    exchange(space, ranLoc)
+                }
+            }
+            //绑定事件
+            var bindEvents = function() {
+                // $('#up').on('click', upMove)
+                // $('#down').on('click', downMove)
+                // $('#left').on('click', leftMove)
+                // $('#right').on('click', rightMove)
+                $('#again').on('click', random)
+                document.addEventListener('keydown', function(event){
+                    var key = event.keyIdentifier
+                    if (!judge()) {
+                        switch (key) {
+                            case 'Up':
+                            case 'U+0057':
+                                upMove()
+                                popup()
+                            break
+                            case 'Left':
+                            case 'U+0041':
+                                leftMove()
+                                popup()
+                            break
+                            case 'Right':
+                            case 'U+0044':
+                                rightMove()
+                                popup()
+                            break
+                            case 'Down':
+                            case 'U+0053':
+                                downMove()
+                                popup()
+                            break
+                            default:break
+                        }
+                    }
+                })
+            }
+            //是否成功
+            var judge = function() {
+                for (var i = 0; i < 8; i++) {
+                    var cell = $($('.num')[i])
+                    if (String(cell.data('loc')) !== cell.text()) {
+                        return false
+                    }
+                }
+                return true
+            }
+            //弹窗
+            var popup = function() {
+                $('.remove').remove()
+                var t = `<div class="modal-container remove">
+                            <div class="modal-mask"></div>
+                                <div class="modal-alert vertical-center">
+                                <div class="modal-title">
+                                    你能玩出来不是说明你厉害
+                                </div>
+                                <div class="modal-message">
+                                    而是说明这次随机没出毛病
+                                </div>
+                                <div class="modal-control">
+                                    <button type="button" name="button" class="modal-button">继续！</button>
+                                </div>
+                            </div>
+                        </div>`
+                var c = `<style class='remove'>
+                            .modal-container {
+                                position: fixed;
+                                width: 100%;
+                                height: 100%;
+                                top:0;
+                                left:0;
+                            }
+                            .modal-mask {
+                                position: fixed;
+                                opacity: 0.5;
+                                width: 100%;
+                                height: 100%;
+                                background-color: black;
+                                top:0;
+                                left:0;
+                            }
+                            .modal-alert {
+                                margin: 0 auto;
+                                width: 300px;
+                                height: 100px;
+                                background-color:white;
+                            }
+                            .modal-title {
+                                height: 30px;
+                                text-align: center;
+                                font-size: 18px;
+                                background: lightblue;
+                            }
+                            .modal-message {
+                                text-align: center;
+                                line-height: 50px;
+                                font-size: 20px;
+                                height: 50px;
+                                background: lightgrey;
+                                padding: 10px 5px;
+                            }
+                            .modal-button {
+                                width: 100%;
+                                height: 100%;
+                                font-size: 15px;
+                            }
+                            .vertical-center {
+                                position: relative;
+                                top: 50%;
+                                transform: translateY(-50%);
+                            }
+                        </style>`
+                    if (judge()) {
+                        $('body').append(t)
+                        $('head').append(c)
+                        $('.window').blur()
+                        $('.modal-button').on('click', random)
+                    }
+            }
+            //主函数
+            var __main = function() {
+                random()
+                bindEvents()
+            }
+
+            __main()
+        </script>
+
+    </body>
+</html>
