@@ -145,7 +145,7 @@
             var randomLoc = function(n) {
                 var n = Number(n)
                 $('.remove').remove()
-                for (var i = 0; i < n * n * 2; i++) {
+                for (var i = 0; i < n * 5; i++) {
                     var space = $('.num0')
                     var ran = Math.floor(Math.random() * (n * n) + 1)
                     var ranLoc = $(`[data-loc=${ran}]`)
@@ -194,7 +194,7 @@
             //是否成功
             var judge = function(n) {
                 var n = Number(n)
-                for (var i = 0; i < n * 5; i++) {
+                for (var i = 0; i < n * n - 1; i++) {
                     var cell = $($('.num')[i])
                     if (String(cell.data('loc')) !== cell.text()) {
                         return false
