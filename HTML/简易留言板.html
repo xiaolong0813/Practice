@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>task16</title>
+        <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    </head>
+    <body>
+
+        <script type="text/javascript">
+                var log = function() {
+                    console.log.apply(console, arguments)
+                }
+                // //定义一个对象，封装留言功能,参数为插入的位置
+                // var Messagefloor = function(div, num) {
+                //     this.div = div
+                //     this.num = num
+                // }
+                //定义全局变量，储存信息和时间
+                var data = []
+                //插入框架和css
+                var container = function(div, num) {
+                    var t = `<div class="long-container">
+                                <div class="long-enter">
+                                    <div class="long-textarea-div">
+                                        <textarea class='long-textarea' rows="8" cols="40"></textarea>
+                                    </div>
+                                    <div class="long-information">
+                                    <div class="long-dis">
+                                        还能输入<span class='long-num'>${num}</span>个字
+                                    </div>
+                                    <button class='long-submit' name="button">提交</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class='long-upScroll-button' name="button">回到顶部</button>
+`
+                    var c = ` <style class='long-css'">
+                                    body {
+                                        font-
+                                    }
+                                .long-container {
+                                    margin: 20px auto 60px auto;
+                                    padding: 10px;
+                                    // background-color: grey;
+                                    width: 800px;
+                                    height: 1000px;
+                                    border: 1px solid grey;
+                                    border-radius: 10px;
+                                    overflow: scroll;
+                                }
+                                .long-enter {
+                                    border-bottom: 1px solid grey;
+                                    margin-bottom: 20px;
+                                    padding: 10px;
+                                }
+                                .long-information {
+                                    height: 50px;
+                                    width: 100%;
+                                    text-align: right;
+                                    line-height: 50px;
+                                }
+                                .long-dis {
+                                    display: inline-block;
+                                }
+                                .long-textarea {
+                                    width: 100%;
+                                    resize: none;
+                                    border-radius: 5px;
+                                }
+                                .long-submit {
+                                    width: 150px;
+                                    height: 40px;
+                                    background-color: rgb(23,45,343);
+                                    color: white;
+                                    border-radius: 5px;
+                                    font-size: 20px;
+                                    font-weight: bolder;
+                                    outline: none;
+                                }
+                                .long-upScroll-button {
+                                    position: fixed;
+                                    right: 50px;
+                                    bottom: 100px;
+                                }
+                            </style> `
+                    $(div).append(t)
+                    $('head').append(c)
+                }
+                //获取textarea内的字数并修改剩余个数
+                var textarea = function(all) {
+                    // var all = this.num
+                    var text = $('.long-textarea')
+                    text.on('input', function(event){
+                        // var text = $('.long-textarea')
+                        var value = text.val()
+                        var num = value.length
+                        // log(num)
+                        var span = $('.long-num')
+                        if (num <= all) {
+                            span.text(all - num)
+                        } else {
+                            var allvalue = value.slice(0, all)
+                            // log(num, value, all, allvalue)
+                            text.val(allvalue)
+                        }
+                    })
+                }
+                var currentTime = function() {
+                  //时间标准库
+                    var d = new Date()
+                    var month = d.getMonth() + 1
+                    var date = d.getDate()
+                    var hours = d.getHours()
+                    var minutes = (d.getMinutes() > 10) ? d.getMinutes() : '0' + d.getMinutes()
+                    var seconds = (d.getSeconds() > 10) ? d.getSeconds() : '0' + d.getSeconds()
+                    var timeString = `${month}月${date}日`
+                    return timeString
+                }
+                //插入模板字符串
+                var template = function(cell) {
+                    var now = cell.time
+                    var t = `
+                    <div class="long-cell">
+                        <img src="../imags/留言板.jpg" class="long-img" data-name='name' />
+                        <div class="long-words">
+                        <div class="long-note">${cell.text}</div>
+                        <div class="long-note">${now}</div>
+                        </div>
+                    </div>`
+                    return t
+                }
+                //css
+                var cssTemp = function() {
+                    var c = `<style class='long-cell-css'">
+                                .long-cell {
+                                    // width: 100%;
+                                    padding: 10px 10px 10px 10px;
+                                    background-color: white;
+                                    height: 100px;
+                                    border-bottom: 2px solid grey;
+                                }
+                                .long-img,.long-words {
+                                    height: 100%;
+                                    float: left;
+                                }
+                                .long-img {
+                                    height: 100%;
+                                    width: 15%;
+                                }
+                                .long-words {
+                                    width: 84%;
+                                    // border: 2px solid red;
+                                }
+                                .long-note {
+                                    display: block;
+                                    margin: 10px auto 0px 30px;
+                                }
+                            </style>`
+                    return c
+                }
+                //插入floor
+                var insertFloor = function(cell) {
+                    var value = cell.text
+                    if (value && value.length > 0) {
+                        var t = template(cell)
+                        var c = cssTemp()
+                        $('.long-container').append(t)
+                        $('.long-textarea').val('')
+                        if ($('head').find('.long-cell-css').length == 0) {
+                            $('head').append(c)
+                        }
+                    }
+                }
+                //点击提交插入div
+                var bindSubmit = function(all) {
+                    $('.long-submit').on('click', function(){
+                        var value = $('.long-textarea').val()
+                        var cell = {
+                            text: value,
+                            time: currentTime()
+                        }
+                        insertFloor(cell)
+                        data.push(cell)
+                        var span = $('.long-num')
+                        span.text(all)
+                        save()
+                    })
+                }
+                //保存已经创建的floor
+                var save = function() {
+                    var text = JSON.stringify(data)
+                    localStorage.save = text
+                    log(text)
+                }
+                //读取存储
+                var load = function() {
+                    var loadData = localStorage.save
+                    return JSON.parse(loadData)
+                }
+                //初始化页面
+                var iniText = function() {
+                    data = load()
+                    for (var i = 0; i < data.length; i++) {
+                        insertFloor(data[i])
+                    }
+                }
+                //添加按钮回到顶部
+                function backTop() {
+                    var btn = document.querySelector('.long-upScroll-button')
+                    var d = document.documentElement;
+                    var b = document.body;
+                    window.onscroll = set;
+                    btn.style.display = "none";
+                    btn.onclick = function() {
+                        btn.style.display = "none";
+                        window.onscroll = null;
+                        this.timer = setInterval(function() {
+                            d.scrollTop -= Math.ceil((d.scrollTop + b.scrollTop) * 0.1);
+                            b.scrollTop -= Math.ceil((d.scrollTop + b.scrollTop) * 0.1);
+                            if ((d.scrollTop + b.scrollTop) == 0) clearInterval(btn.timer, window.onscroll = set)
+                        },
+                        10);
+                    };
+                    function set() {
+                        btn.style.display = (d.scrollTop + b.scrollTop > 100) ? 'block': "none"
+                    }
+                }
+                //声明一个对象
+                // var newMessage = new Messagefloor('body', 10)
+                var __main = function(div, num) {
+                    container(div, num)
+                    textarea(num)
+                    bindSubmit(num)
+                    iniText()
+                    backTop()
+                }
+
+                __main('body', 10)
+
+                // log(newMessage.num)
+
+        </script>
+
+    </body>
+</html>
