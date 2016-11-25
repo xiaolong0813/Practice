@@ -40,12 +40,12 @@ Amp.prototype.mouseOver = function() {
             this.bigW = this.big.offsetWidth
             this.bigH = this.big.offsetHeight
 
-            // this.smallDivW = this.smallDiv.offsetWidth
-            // this.smallDivH = this.smallDiv.offsetHeight
+            this.smallDivW = this.smallDiv.offsetWidth
+            this.smallDivH = this.smallDiv.offsetHeight
             // log(this.smallW, this.bigW)
             //计算滑动层的宽高
-            this.fsW = Math.ceil(this.smallW / this.bigW * this.smallW)
-            this.fsH = Math.ceil(this.smallH / this.bigH * this.smallH)
+            this.fsW = Math.ceil(this.smallW / this.bigW * this.smallDivW)
+            this.fsH = Math.ceil(this.smallH / this.bigH * this.smallDivH)
             this.fs.style.width = this.fsW + 'px'
             this.fs.style.height = this.fsH + 'px'
             //获取一次之后就不再改变
@@ -62,7 +62,7 @@ Amp.prototype.mouseOut = function() {
 Amp.prototype.mouseMove = function() {
     this.c.addEventListener('mousemove', function(e){
         // log(e.clientX, this.small.offsetLeft)
-        //计算cover在smallDiv里面的位置
+        //计算fs在smallDiv里面的位置
         var left = e.clientX - this.sbp.offsetLeft - this.fs.offsetWidth / 2
         var top = e.clientY - this.sbp.offsetTop - this.fs.offsetHeight / 2
         //如果到了边缘
@@ -80,14 +80,9 @@ Amp.prototype.mouseMove = function() {
         this.fs.style.top = top + 'px'
         this.big.style.left = -(left * (this.big.offsetWidth / this.c.offsetWidth)) + 'px'
         this.big.style.top = -(top * (this.big.offsetHeight / this.c.offsetHeight)) + 'px'
-        log(this.big.style.top)
+        // log(this.big.style.top)
     }.bind(this))
 }
-
-
-
-
-
 
 var __main = function() {
     var amp = new Amp()
